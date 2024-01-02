@@ -1,0 +1,87 @@
+[debug] > Exec(early(addDefaultCommands), None, None)
+[debug] > Exec(addDefaultCommands, None, None)
+[debug] > Exec(early(initialize), None, None)
+[debug] > Exec(initialize, None, None)
+[debug] > Exec(boot, None, None)
+[debug] > Exec(writeSbtVersion, None, None)
+[debug] > Exec(reload, None, None)
+[debug] > Exec(sbtStashOnFailure, None, None)
+[debug] > Exec(onFailure loadFailed, None, None)
+[debug] > Exec(loadp, None, None)
+[info] welcome to sbt 1.5.5 (Ubuntu Java 11.0.21)
+[debug] Load.defaultLoad until apply took 582.968926ms
+[debug]                 Load.loadUnit: plugins took 122.498688ms
+[debug]                 Load.loadUnit: defsScala took 0.40342ms
+[debug] [Loading] Scanning directory /home/wuzho/Desktop/MOSIG-M2/Data-Management/lab_spark/Clusterdata/project/project
+[debug]                   Load.loadUnit: mkEval took 10.411714ms
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in /home/wuzho/Desktop/MOSIG-M2/Data-Management/lab_spark/Clusterdata/project/project, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin)))
+[debug] Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)
+[debug] Plugins.deducer#function took 48.708974 ms
+[info] loading settings for project clusterdata-build-build from metals.sbt ...
+[debug]                     Load.resolveProject(clusterdata-build-build) took 83.003075ms
+[debug]                   Load.loadTransitive: finalizeProject(Project(id clusterdata-build-build, base: /home/wuzho/Desktop/MOSIG-M2/Data-Management/lab_spark/Clusterdata/project/project, plugins: List(<none>))) took 167.879633ms
+[debug] [Loading] Done in /home/wuzho/Desktop/MOSIG-M2/Data-Management/lab_spark/Clusterdata/project/project, returning: (clusterdata-build-build)
+[debug]                 Load.loadUnit: loadedProjectsRaw took 750.880131ms
+[debug]                 Load.loadUnit: cleanEvalClasses took 11.092865ms
+[debug]               Load.loadUnit(file:/home/wuzho/Desktop/MOSIG-M2/Data-Management/lab_spark/Clusterdata/project/project/, ...) took 891.634281ms
+[debug]             Load.apply: load took 1132.607975ms
+[debug]             Load.apply: resolveProjects took 12.772027ms
+[debug]             Load.apply: finalTransforms took 115.635091ms
+[debug]             Load.apply: config.delegates took 13.519795ms
+[debug]             Load.apply: Def.make(settings)... took 888.450427ms
+[debug]             Load.apply: structureIndex took 170.135781ms
+[debug]             Load.apply: mkStreams took 4.491917ms
+[info] loading project definition from /home/wuzho/Desktop/MOSIG-M2/Data-Management/lab_spark/Clusterdata/project/project
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[debug]           Load.loadUnit: plugins took 4502.114081ms
+[debug]           Load.loadUnit: defsScala took 0.045102ms
+[debug] [Loading] Scanning directory /home/wuzho/Desktop/MOSIG-M2/Data-Management/lab_spark/Clusterdata/project
+[debug]             Load.loadUnit: mkEval took 0.437056ms
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in /home/wuzho/Desktop/MOSIG-M2/Data-Management/lab_spark/Clusterdata/project, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin)))
+[debug] Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(bloop.integrations.sbt.BloopPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(bloop.integrations.sbt.BloopPlugin))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,bloop.integrations.sbt.BloopPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)
+[debug] Plugins.deducer#function took 4.550858 ms
+[info] loading settings for project clusterdata-build from metals.sbt ...
+[debug]               Load.resolveProject(clusterdata-build) took 52.820605ms
+[debug]             Load.loadTransitive: finalizeProject(Project(id clusterdata-build, base: /home/wuzho/Desktop/MOSIG-M2/Data-Management/lab_spark/Clusterdata/project, plugins: List(<none>))) took 58.762241ms
+[debug] [Loading] Done in /home/wuzho/Desktop/MOSIG-M2/Data-Management/lab_spark/Clusterdata/project, returning: (clusterdata-build)
+[debug]           Load.loadUnit: loadedProjectsRaw took 79.913985ms
+[debug]           Load.loadUnit: cleanEvalClasses took 0.846918ms
+[debug]         Load.loadUnit(file:/home/wuzho/Desktop/MOSIG-M2/Data-Management/lab_spark/Clusterdata/project/, ...) took 4586.237161ms
+[debug]       Load.apply: load took 4589.520043ms
+[debug]       Load.apply: resolveProjects took 0.291057ms
+[debug]       Load.apply: finalTransforms took 24.642884ms
+[debug]       Load.apply: config.delegates took 0.653062ms
+[debug]       Load.apply: Def.make(settings)... took 146.804228ms
+[debug]       Load.apply: structureIndex took 56.118076ms
+[debug]       Load.apply: mkStreams took 0.013508ms
+[info] loading project definition from /home/wuzho/Desktop/MOSIG-M2/Data-Management/lab_spark/Clusterdata/project
+[debug] Evaluating tasks: bloopInstall
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
