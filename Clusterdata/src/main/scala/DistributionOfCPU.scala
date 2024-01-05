@@ -14,7 +14,7 @@ object DistributionOfCPU {
       sc.setLogLevel("ERROR")
 
       // read the input file into an RDD[String]
-      val machine_events_rdd = sc.textFile("./src/main/data/part-00000-of-00001.csv").map(x => x.split(","))
+      val machine_events_rdd = sc.textFile("./src/main/data/machine_events/part-00000-of-00001.csv").map(x => x.split(","))
 
       val rdd_CPU_Capacity = machine_events_rdd.map(x => (  
          try {
