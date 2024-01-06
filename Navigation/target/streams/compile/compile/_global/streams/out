@@ -1,4 +1,0 @@
-[0m[[0m[31merror[0m] [0m[0m/Users/mayuqiang/Desktop/M2 SEM1/distributed system/lab_students/provided_code/Navigation/src/main/scala/navigation.scala:39:57: ';' expected but 'for' found.[0m
-[0m[[0m[31merror[0m] [0m[0m                entries.take(5).foreach(x=> {println(i) for i in x})[0m
-[0m[[0m[31merror[0m] [0m[0m                                                        ^[0m
-[0m[[0m[31merror[0m] [0m[0mone error found[0m
