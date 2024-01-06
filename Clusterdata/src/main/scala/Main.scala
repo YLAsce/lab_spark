@@ -13,10 +13,13 @@ object Main {
       case "task1" => Task1DistributionOfCPU.execute()
       case "task2" => Task2PercentageOfCompPowerLost.execute()
       case "task3" => Task3DistributionOfSchedulingClass.execute()
+      case "task4" => Task4SchedulingClassEviction.execute()
+      case "task5" => Task5SameJobMachine.execute()
+      case "task6" => Task6ResourceRequestConsume.execute()
       case "task7" => Task7CorrelationHighConsumEviction.execute()
       // 添加更多任务...
       case _ =>
-        println(s"Unknown task: $taskName")
+        println(s"[ERROR] Unknown task ID: $taskName")
         System.exit(1)
     }
   }

@@ -12,7 +12,7 @@ object ReadSchema {
         val schemaLines = Source.fromFile(schemaFile).getLines().toList
 
         // 选择 job_events 开头的行
-        val jobEventsSchemaLines = schemaLines.filter(line => line.startsWith("job_events"))
+        val jobEventsSchemaLines = schemaLines.filter(line => line.startsWith(name))
 
         // 创建 StructField 数组
         val fields = jobEventsSchemaLines.map { line =>
