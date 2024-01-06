@@ -1,6 +1,6 @@
 package clusterdata
 
-object ClusterData {
+object Main {
   def main(args: Array[String]): Unit = {
     if (args.length < 1) {
       println("[ERROR] Usage: spark-submit target/scala-2.12/clusterdata_2.12-1.0.jar [taskID]")
