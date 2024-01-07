@@ -27,15 +27,17 @@ object Task4SchedulingClassEviction {
 
         val df_class_eviction = df_task_events_var.groupBy("job ID", "task index")
             .agg(
-                max(when(col("event type").equalTo(2), 1).otherwise(0)).as("if evict"),
+                max(when(col("event type").equalTo(2), 1).otherwise(0)).as("evicted"),
                 first("scheduling class").as("scheduling class"),
             )
 
         val df_percent_eviction_by_class = df_class_eviction.groupBy("scheduling class")
             .agg(
-                (sum(col("if evict")) / count("*")).as("percent_evicted")
+                (sum(col("evicted")) / count("*")).as("percent_evicted")
             ).sort("scheduling class")
-            
+
         df_percent_eviction_by_class.show()
+
+        sk.stop()
     }
 }
