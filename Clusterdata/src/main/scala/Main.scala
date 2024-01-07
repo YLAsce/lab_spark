@@ -17,6 +17,7 @@ object Main {
       case "task5" => Task5SameJobMachine.execute()
       case "task6" => Task6ResourceRequestConsume.execute()
       case "task7" => Task7CorrelationHighConsumEviction.execute()
+      case "task8" => Task8TaskConsumCPUAndMem.execute()
       // 添加更多任务...
       case _ =>
         println(s"[ERROR] Unknown task ID: $taskName")
