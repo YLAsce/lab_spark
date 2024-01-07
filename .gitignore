@@ -3,3 +3,6 @@
 /Clusterdata/.bsp
 /Clusterdata/.bloop
 /Clusterdata/project
+/.metals/*
+/.vscode
+.metals/metals.lock.db
