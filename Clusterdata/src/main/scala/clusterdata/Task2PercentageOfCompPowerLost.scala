@@ -7,14 +7,22 @@ import org.apache.spark.rdd.RDD
 import org.apache.commons.math3.ml.clustering.Cluster
 
 object Task2PercentageOfCompPowerLost {
-   def execute() = {
+   def execute(onCloud: Boolean) = {
       // start spark with 1 worker thread
-      val conf = new SparkConf().setAppName("ClusterData").setMaster("local[1]")
+      var conf = new SparkConf().setAppName("ClusterData")
+      if(!onCloud) {
+         println("Not run on cloud")
+         conf = conf.setMaster("local[1]")
+      }
       val sc = new SparkContext(conf)
       sc.setLogLevel("ERROR")
 
       // read the input file into an RDD[String]
-      val machine_events_rdd = sc.textFile("./data/machine_events/part-00000-of-00001.csv").map(x => x.split(","))
+      var machine_events_input = sc.textFile("./data/machine_events/part-00000-of-00001.csv")
+      if(onCloud) {
+         machine_events_input = sc.textFile("gs://clusterdata-2011-2/machine_events/*.csv.gz")
+      }
+      val machine_events_rdd = machine_events_input.map(x => x.split(","))
 
       val rdd_EventType_CPUCapacity = machine_events_rdd.map(x => (  
          try {

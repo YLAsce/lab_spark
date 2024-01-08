@@ -1,0 +1,57 @@
+package clusterdata
+
+import org.apache.spark.sql.{SparkSession, DataFrame}
+import org.apache.spark.sql.functions._
+import java.nio.file.{Files, Paths, FileVisitOption}
+
+object Task9CorrFlowTimeAndConsum {
+    def execute(onCloud: Boolean) {
+        // Initialize schemas
+        val schema_task_usage = ReadSchema.read("task_usage")
+        schema_task_usage.printTreeString()
+
+        // Initialize SparkSession
+        var skb = SparkSession.builder().appName("CFTAC")
+        if(!onCloud) {
+            println("Not run on cloud")
+            skb = skb.master("local[*]")
+        }
+        val sk = skb.getOrCreate()
+
+        // Set level of log to ERROR
+        sk.sparkContext.setLogLevel("ERROR")
+
+        // Read the data files (*.csv)
+        var taskUsageDF : DataFrame = sk.read
+                                  .format("csv")
+                                  .option("header", "false")
+                                  .schema(schema_task_usage)
+                                  .load("./data/task_usage/*.csv")
+        if(onCloud) {
+            taskUsageDF = sk.read
+                                  .format("csv")
+                                  .option("header", "false")
+                                  .option("compression", "gzip")
+                                  .schema(schema_task_usage)
+                                  .load("gs://clusterdata-2011-2/task_usage/*.csv.gz")
+        }
+        
+        val taskUsageTimeDF = taskUsageDF.withColumn("Flow time", col("end time") - col("start time"))
+
+        val taskUsageTimeSumDF = taskUsageTimeDF.select("job ID", "task index", "CPU rate", "canonical memory usage", "Flow time")
+                                                .groupBy("job ID", "task index")
+                                                .agg(sum("CPU rate").alias("SUM CPU Usage"),
+                                                    sum("canonical memory usage").alias("SUM Mem Usage"),
+                                                    sum("Flow time").alias("Sum Time consum"))
+
+        val corrTimeCPU = taskUsageTimeSumDF.stat.corr("Sum Time consum", "SUM CPU Usage")
+
+        val corrTimeMem = taskUsageTimeSumDF.stat.corr("Sum Time consum", "SUM Mem Usage")
+
+        println("Correlation between Flow time and CPU usage: " + corrTimeCPU)
+        println("Correlation between Flow time and Memory usage: " + corrTimeMem)
+
+        // Shut down SparkSession
+        sk.stop()
+    }
+}

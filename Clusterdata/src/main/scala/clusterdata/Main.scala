@@ -20,6 +20,7 @@ object Main {
       case "task6" => Task6ResourceRequestConsume.execute(onCloud)
       case "task7" => Task7CorrelationHighConsumEviction.execute(onCloud)
       case "task8" => Task8TaskConsumCPUAndMem.execute(onCloud)
+      case "task9" => Task9CorrFlowTimeAndConsum.execute(onCloud)
       // 添加更多任务...
       case _ =>
         println(s"[ERROR] Unknown task ID: $taskName")

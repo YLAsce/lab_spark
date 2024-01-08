@@ -5,27 +5,36 @@ import org.apache.spark.sql.functions._
 import java.nio.file.{Files, Paths, FileVisitOption}
 
 object Task8TaskConsumCPUAndMem {
-    def execute() {
+    def execute(onCloud: Boolean) {
         // Initialize schemas
         val schema_task_usage = ReadSchema.read("task_usage")
         schema_task_usage.printTreeString()
 
         // Initialize SparkSession
-        val sk = SparkSession.builder()
-                              .appName("CHCE")
-                              .master("local[*]")
-                              .getOrCreate()
+        var skb = SparkSession.builder().appName("TCCAM")
+        if(!onCloud) {
+            println("Not run on cloud")
+            skb = skb.master("local[*]")
+        }
+        val sk = skb.getOrCreate()
 
         // Set level of log to ERROR
         sk.sparkContext.setLogLevel("ERROR")
 
         // Read the data files (*.csv)
-        val taskUsageDF = sk.read
-                    .format("csv")
-                    .option("header", "false")
-                    .option("delimiter", ",")
-                    .schema(schema_task_usage)
-                    .load("./data/task_usage/*.csv")
+        var taskUsageDF : DataFrame = sk.read
+                                  .format("csv")
+                                  .option("header", "false")
+                                  .schema(schema_task_usage)
+                                  .load("./data/task_usage/*.csv")
+        if(onCloud) {
+            taskUsageDF = sk.read
+                                  .format("csv")
+                                  .option("header", "false")
+                                  .option("compression", "gzip")
+                                  .schema(schema_task_usage)
+                                  .load("gs://clusterdata-2011-2/task_usage/*.csv.gz")
+        }
 
         // Aggregate sum the CPU usage and Memory usage by each task
         val taskCPUConsumSumDF = taskUsageDF.select("job ID", "task index", "CPU rate")

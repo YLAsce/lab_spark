@@ -5,7 +5,7 @@ import org.apache.spark.sql.functions._
 import java.nio.file.{Files, Paths, FileVisitOption}
 
 object Task7CorrelationHighConsumEviction {
-    def execute() = {
+    def execute(onCloud: Boolean) = {
         // Initialize schemas
         val schema_task_events = ReadSchema.read("task_events")
         schema_task_events.printTreeString()
@@ -13,27 +13,44 @@ object Task7CorrelationHighConsumEviction {
         schema_task_usage.printTreeString()
 
         // Initialize SparkSession
-        val sk = SparkSession.builder()
-                              .appName("CHCE")
-                              .master("local[*]")
-                              .getOrCreate()
+        var skb = SparkSession.builder().appName("CHCE")
+        if(!onCloud) {
+            println("Not run on cloud")
+            skb = skb.master("local[*]")
+        }
+        val sk = skb.getOrCreate()
 
         // Set level of log to ERROR
         sk.sparkContext.setLogLevel("ERROR")
 
         // Read the data files (*.csv)
-        val taskEventsDF = sk.read
-                              .format("csv")
-                              .option("header", "false")
-                              .option("delimiter", ",")
-                              .schema(schema_task_events)
-                              .load("./data/task_events/*.csv")
-        val taskUsageDF = sk.read
-                            .format("csv")
-                            .option("header", "false")
-                            .option("delimiter", ",")
-                            .schema(schema_task_usage)
-                            .load("./data/task_usage/*.csv")
+        var taskEventsDF : DataFrame = sk.read
+                                  .format("csv")
+                                  .option("header", "false")
+                                  .schema(schema_task_events)
+                                  .load("./data/task_events/*.csv")
+        if(onCloud) {
+            taskEventsDF = sk.read
+                                  .format("csv")
+                                  .option("header", "false")
+                                  .option("compression", "gzip")
+                                  .schema(schema_task_events)
+                                  .load("gs://clusterdata-2011-2/task_events/*.csv.gz")
+        }
+
+        var taskUsageDF : DataFrame = sk.read
+                                  .format("csv")
+                                  .option("header", "false")
+                                  .schema(schema_task_usage)
+                                  .load("./data/task_usage/*.csv")
+        if(onCloud) {
+            taskUsageDF = sk.read
+                                  .format("csv")
+                                  .option("header", "false")
+                                  .option("compression", "gzip")
+                                  .schema(schema_task_usage)
+                                  .load("gs://clusterdata-2011-2/task_usage/*.csv.gz")
+        }
 
         // Extract the dataframe of the evicted tasks
         val evictedTasksDF = taskEventsDF.filter(col("Event type") === 2).select("job ID", "task index", "machine ID")

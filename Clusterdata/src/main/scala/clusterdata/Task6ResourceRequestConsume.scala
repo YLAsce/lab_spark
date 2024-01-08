@@ -5,7 +5,7 @@ import org.apache.spark.sql.functions._
 import java.nio.file.{Files, Paths, FileVisitOption}
 
 object Task6ResourceRequestConsume {
-    def execute() = {
+    def execute(onCloud: Boolean) = {
         // Initialize schemas
         val schema_task_events = ReadSchema.read("task_events")
         schema_task_events.printTreeString()
@@ -13,27 +13,44 @@ object Task6ResourceRequestConsume {
         schema_task_usage.printTreeString()
 
         // Initialize SparkSession
-        val sk = SparkSession.builder()
-                              .appName("RRC")
-                              .master("local[*]")
-                              .getOrCreate()
+        var skb = SparkSession.builder().appName("RRC")
+        if(!onCloud) {
+            println("Not run on cloud")
+            skb = skb.master("local[*]")
+        }
+        val sk = skb.getOrCreate()
 
         // Set level of log to ERROR
         sk.sparkContext.setLogLevel("ERROR")
 
         // Read the data files (*.csv)
-        val df_task_events = sk.read
-                              .format("csv")
-                              .option("header", "false")
-                              .option("delimiter", ",")
-                              .schema(schema_task_events)
-                              .load("./data/task_events/*.csv")
-        val df_task_usage = sk.read
-                            .format("csv")
-                            .option("header", "false")
-                            .option("delimiter", ",")
-                            .schema(schema_task_usage)
-                            .load("./data/task_usage/*.csv")    
+        var df_task_events : DataFrame = sk.read
+                                  .format("csv")
+                                  .option("header", "false")
+                                  .schema(schema_task_events)
+                                  .load("./data/task_events/*.csv")
+        if(onCloud) {
+            df_task_events = sk.read
+                                  .format("csv")
+                                  .option("header", "false")
+                                  .option("compression", "gzip")
+                                  .schema(schema_task_events)
+                                  .load("gs://clusterdata-2011-2/task_events/*.csv.gz")
+        }
+
+        var df_task_usage : DataFrame = sk.read
+                                  .format("csv")
+                                  .option("header", "false")
+                                  .schema(schema_task_usage)
+                                  .load("./data/task_usage/*.csv")
+        if(onCloud) {
+            df_task_usage = sk.read
+                                  .format("csv")
+                                  .option("header", "false")
+                                  .option("compression", "gzip")
+                                  .schema(schema_task_usage)
+                                  .load("gs://clusterdata-2011-2/task_usage/*.csv.gz")
+        }  
 
         val df_task_resource_request = df_task_events.groupBy("job ID", "task index")
             .agg(
