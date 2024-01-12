@@ -21,12 +21,9 @@ object Task9CorrFlowTimeAndConsum {
         // Set level of log to ERROR
         sk.sparkContext.setLogLevel("ERROR")
 
-        // Read the data files (*.csv)
-        var taskUsageDF : DataFrame = sk.read
-                                  .format("csv")
-                                  .option("header", "false")
-                                  .schema(schema_task_usage)
-                                  .load("./data/task_usage/*.csv")
+        // Load data files, from local machine or Google Cloud
+        var taskUsageDF : DataFrame = sk.emptyDataFrame
+        
         if(onCloud) {
             taskUsageDF = sk.read
                                   .format("csv")
@@ -34,15 +31,21 @@ object Task9CorrFlowTimeAndConsum {
                                   .option("compression", "gzip")
                                   .schema(schema_task_usage)
                                   .load("gs://clusterdata-2011-2/task_usage/*.csv.gz")
+        } else {
+            taskUsageDF = sk.read
+                                  .format("csv")
+                                  .option("header", "false")
+                                  .schema(schema_task_usage)
+                                  .load("./data/task_usage/*.csv")
         }
         
         val taskUsageTimeDF = taskUsageDF.withColumn("Flow time", col("end time") - col("start time"))
 
         val taskUsageTimeSumDF = taskUsageTimeDF.select("job ID", "task index", "CPU rate", "canonical memory usage", "Flow time")
                                                 .groupBy("job ID", "task index")
-                                                .agg(sum("CPU rate").alias("SUM CPU Usage"),
-                                                    sum("canonical memory usage").alias("SUM Mem Usage"),
-                                                    sum("Flow time").alias("Sum Time consum"))
+                                                .agg(avg("CPU rate").alias("SUM CPU Usage"),
+                                                    avg("canonical memory usage").alias("SUM Mem Usage"),
+                                                    avg("Flow time").alias("Sum Time consum"))
 
         val corrTimeCPU = taskUsageTimeSumDF.stat.corr("Sum Time consum", "SUM CPU Usage")
 

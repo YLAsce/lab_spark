@@ -6,11 +6,11 @@ object Main {
       println("[ERROR] Usage: spark-submit target/scala-2.12/clusterdata_2.12-1.0.jar [taskID]")
       System.exit(1)
     }
-
+    // Different settings when executing on local machine or on Google cloud
     val onCloud = if (args(1) == "cloud") true else false
     
     val taskName = args(0)
-    // 根据 taskName 执行相应的任务逻辑
+    // Execute task according to the input task id
     taskName match {
       case "task1" => Task1DistributionOfCPU.execute(onCloud)
       case "task2" => Task2PercentageOfCompPowerLost.execute(onCloud)
@@ -21,7 +21,7 @@ object Main {
       case "task7" => Task7CorrelationHighConsumEviction.execute(onCloud)
       case "task8" => Task8TaskConsumCPUAndMem.execute(onCloud)
       case "task9" => Task9CorrFlowTimeAndConsum.execute(onCloud)
-      // 添加更多任务...
+      // Task not exist
       case _ =>
         println(s"[ERROR] Unknown task ID: $taskName")
         System.exit(1)

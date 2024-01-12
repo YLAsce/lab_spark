@@ -4,8 +4,11 @@ import scala.io.Source
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types._
 
+// Automatically generate Spark schema according to the schema.csv file
 object ReadSchema {
     def read(name: String): StructType = {
+        // Copy the schema.csv file here
+        // Avoid building Scala file reading process on Google Cloud
         val schema_csv = 
 """
 file pattern,field number,content,format,mandatory
@@ -68,13 +71,12 @@ task_usage/part-?????-of-?????.csv.gz,18,sample portion,FLOAT,NO
 task_usage/part-?????-of-?????.csv.gz,19,aggregation type,BOOLEAN,NO
 task_usage/part-?????-of-?????.csv.gz,20,sampled CPU usage,FLOAT,NO
 """
-        // 读取 schema CSV 文件
         val schemaLines = schema_csv.split("\n").toList
 
-        // 选择 job_events 开头的行
+        // Filter lines in the required file
         val jobEventsSchemaLines = schemaLines.filter(line => line.startsWith(name))
 
-        // 创建 StructField 数组
+        // Build StructField array as Spark schema
         val fields = jobEventsSchemaLines.map { line =>
         val Array(_, _, name, dataType, mandatory) = line.split(",").map(_.trim)
         val sparkDataType = dataType match {
@@ -83,11 +85,11 @@ task_usage/part-?????-of-?????.csv.gz,20,sampled CPU usage,FLOAT,NO
             case "FLOAT" => FloatType
             case "BOOLEAN" => BooleanType
             case "STRING_HASH_OR_INTEGER" => StringType
-            // 添加其他可能的数据类型
         }
         StructField(name, sparkDataType, !mandatory.equalsIgnoreCase("YES"))
         }
 
+        // Return a StructType
         StructType(fields)
 
     }

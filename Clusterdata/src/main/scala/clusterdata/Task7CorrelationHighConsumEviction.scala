@@ -23,12 +23,9 @@ object Task7CorrelationHighConsumEviction {
         // Set level of log to ERROR
         sk.sparkContext.setLogLevel("ERROR")
 
-        // Read the data files (*.csv)
-        var taskEventsDF : DataFrame = sk.read
-                                  .format("csv")
-                                  .option("header", "false")
-                                  .schema(schema_task_events)
-                                  .load("./data/task_events/*.csv")
+        // Load data files, from local machine or Google Cloud
+        var taskEventsDF : DataFrame = sk.emptyDataFrame
+        
         if(onCloud) {
             taskEventsDF = sk.read
                                   .format("csv")
@@ -36,13 +33,16 @@ object Task7CorrelationHighConsumEviction {
                                   .option("compression", "gzip")
                                   .schema(schema_task_events)
                                   .load("gs://clusterdata-2011-2/task_events/*.csv.gz")
-        }
-
-        var taskUsageDF : DataFrame = sk.read
+        } else {
+          taskEventsDF = sk.read
                                   .format("csv")
                                   .option("header", "false")
-                                  .schema(schema_task_usage)
-                                  .load("./data/task_usage/*.csv")
+                                  .schema(schema_task_events)
+                                  .load("./data/task_events/*.csv")
+        }
+
+        var taskUsageDF : DataFrame = sk.emptyDataFrame
+        
         if(onCloud) {
             taskUsageDF = sk.read
                                   .format("csv")
@@ -50,6 +50,12 @@ object Task7CorrelationHighConsumEviction {
                                   .option("compression", "gzip")
                                   .schema(schema_task_usage)
                                   .load("gs://clusterdata-2011-2/task_usage/*.csv.gz")
+        } else {
+            taskUsageDF = sk.read
+                                  .format("csv")
+                                  .option("header", "false")
+                                  .schema(schema_task_usage)
+                                  .load("./data/task_usage/*.csv")
         }
 
         // Extract the dataframe of the evicted tasks

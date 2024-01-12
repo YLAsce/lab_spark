@@ -6,6 +6,7 @@ import org.apache.spark.SparkConf
 import org.apache.spark.rdd.RDD
 import org.apache.commons.math3.ml.clustering.Cluster
 
+// Task1: What is the distribution of the machines according to their CPU capacity?
 object Task1DistributionOfCPU {
    def execute(onCloud: Boolean) = {
       // start spark with 1 worker thread
@@ -17,7 +18,7 @@ object Task1DistributionOfCPU {
       val sc = new SparkContext(conf)
       sc.setLogLevel("ERROR")
 
-      // read the input file into an RDD[String]
+      // read the input file into an RDD[String], from local machine or Google Cloud
       var machine_events_input = sc.textFile("./data/machine_events/part-00000-of-00001.csv.gz")
       if(onCloud) {
          machine_events_input = sc.textFile("gs://clusterdata-2011-2/machine_events/*.csv.gz")

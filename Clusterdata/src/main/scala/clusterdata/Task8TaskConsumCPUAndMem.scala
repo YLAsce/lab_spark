@@ -21,12 +21,9 @@ object Task8TaskConsumCPUAndMem {
         // Set level of log to ERROR
         sk.sparkContext.setLogLevel("ERROR")
 
-        // Read the data files (*.csv)
-        var taskUsageDF : DataFrame = sk.read
-                                  .format("csv")
-                                  .option("header", "false")
-                                  .schema(schema_task_usage)
-                                  .load("./data/task_usage/*.csv")
+        // Load data files, from local machine or Google Cloud
+        var taskUsageDF : DataFrame = sk.emptyDataFrame
+        
         if(onCloud) {
             taskUsageDF = sk.read
                                   .format("csv")
@@ -34,15 +31,21 @@ object Task8TaskConsumCPUAndMem {
                                   .option("compression", "gzip")
                                   .schema(schema_task_usage)
                                   .load("gs://clusterdata-2011-2/task_usage/*.csv.gz")
+        } else {
+            taskUsageDF = sk.read
+                                  .format("csv")
+                                  .option("header", "false")
+                                  .schema(schema_task_usage)
+                                  .load("./data/task_usage/*.csv")
         }
 
         // Aggregate sum the CPU usage and Memory usage by each task
         val taskCPUConsumSumDF = taskUsageDF.select("job ID", "task index", "CPU rate")
                                             .groupBy("job ID", "task index")
-                                            .agg(sum("CPU rate").alias("SUM CPU Usage"))
+                                            .agg(avg("CPU rate").alias("SUM CPU Usage"))
         val taskMemConsumSumDF = taskUsageDF.select("job ID", "task index", "canonical memory usage")
                                             .groupBy("job ID", "task index")
-                                            .agg(sum("canonical memory usage").alias("SUM Mem Usage"))
+                                            .agg(avg("canonical memory usage").alias("SUM Mem Usage"))
 
         // Set the range
         val topCPU : Int = 1000

@@ -7,6 +7,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.commons.math3.ml.clustering.Cluster
 import java.nio.file.{Files, Paths, FileVisitOption}
 
+// Task3: What is the distribution of the number of jobs/tasks per scheduling class?
 object Task3DistributionOfSchedulingClass {
    def execute(onCloud: Boolean) = {
       // start spark with 1 worker thread
@@ -18,7 +19,7 @@ object Task3DistributionOfSchedulingClass {
       val sc = new SparkContext(conf)
       sc.setLogLevel("ERROR")
 
-      // read the input file into an RDD[String]
+      // read the input file into an RDD[String], from local machine or Google Cloud
       var job_events_input = sc.textFile("./data/job_events/*.csv")
       if(onCloud) {
          job_events_input = sc.textFile("gs://clusterdata-2011-2/job_events/*.csv.gz")

@@ -6,6 +6,7 @@ import org.apache.spark.SparkConf
 import org.apache.spark.rdd.RDD
 import org.apache.commons.math3.ml.clustering.Cluster
 
+// Task2: What is the percentage of computational power lost due to maintenance (a machine went offline and reconnected later)?
 object Task2PercentageOfCompPowerLost {
    def execute(onCloud: Boolean) = {
       // start spark with 1 worker thread
@@ -17,7 +18,7 @@ object Task2PercentageOfCompPowerLost {
       val sc = new SparkContext(conf)
       sc.setLogLevel("ERROR")
 
-      // read the input file into an RDD[String]
+      // read the input file into an RDD[String], from local machine or Google Cloud
       var machine_events_input = sc.textFile("./data/machine_events/part-00000-of-00001.csv")
       if(onCloud) {
          machine_events_input = sc.textFile("gs://clusterdata-2011-2/machine_events/*.csv.gz")
