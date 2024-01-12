@@ -44,26 +44,24 @@ object Task2PercentageOfCompPowerLost {
          })
       )
 
+      // Discard the key-value pairs with null value
       val rdd_EventType_CPUCapacity_filtered = rdd_EventType_CPUCapacity.filter(x => x._1 != "NA" && x._2 != "NA")
 
+      // Since the "NA" converts the type of elements in the column into String, convert them back to FLOAT
       val rdd_EventType_CPUCapacity_Convert = rdd_EventType_CPUCapacity_filtered.mapValues(value => value.toFloat)
 
+      // Compute the computational power by the machine's event type
       val rdd_EventType_CPUCapacity_SUM = rdd_EventType_CPUCapacity_Convert.reduceByKey((x, y) => (x + y))
 
+      // Compute the total computational power
       val total_sum = rdd_EventType_CPUCapacity_SUM.map(x => x._2).reduce(_ + _)
+
+      // Compute the computational power of the "went offline..." machines
       val eventtype1_sum = rdd_EventType_CPUCapacity_SUM.filter(x => x._1 == "1").first()._2
+
+      // Print logs
       println("total sum: " + total_sum + "event type 1 sum: " + eventtype1_sum)
       println("Percentage of Lost Computational Power: " + ((eventtype1_sum / total_sum) * 100.0) + "%")
-
-    //   val rdd_count = rdd_CPU_Capacity_SUM.map(x => (x._1, x._2))
-
-      
-    //   println("DEBUG: " + rdd_CPU_Capacity_SUM_filtered.first()._1 + ", " + rdd_CPU_Capacity_SUM.first()._2)
-      rdd_EventType_CPUCapacity_SUM.foreach(x => {
-         val key = x._1
-         val values = x._2
-         println(s"Event type: $key, Sum of CPU Capacity: $values")
-      })
 
       sc.stop()
    }

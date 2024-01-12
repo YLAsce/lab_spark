@@ -42,10 +42,14 @@ object Task1DistributionOfCPU {
                // Return the default pair
                ("NA", "NA")
          })
-      ).groupByKey()
+      ).groupByKey() // group the key-value pairs by the column of "CPUs"
 
+      // The length of the vector of value 
+      // is the number of machines
+      // corresponding to the key (CPU capacity)
       val rdd_count = rdd_CPU_Capacity.map(x => (x._1, x._2.size)).collect()
 
+      // Print logs
       println("Distribution of the machines according to their CPU capacity: ")
       rdd_count.foreach(x => {
          val key = x._1

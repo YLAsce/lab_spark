@@ -19,7 +19,7 @@ object Task3DistributionOfSchedulingClass {
       val sc = new SparkContext(conf)
       sc.setLogLevel("ERROR")
 
-      // read the input file into an RDD[String], from local machine or Google Cloud
+      // read the input file into an RDD, from local machine or Google Cloud
       var job_events_input = sc.textFile("./data/job_events/*.csv")
       if(onCloud) {
          job_events_input = sc.textFile("gs://clusterdata-2011-2/job_events/*.csv.gz")
@@ -33,7 +33,7 @@ object Task3DistributionOfSchedulingClass {
       val task_events_rdd = task_events_input.map(x => x.split(","))
 
 
-
+      // Discard the rows with null value in the column of "Scheduling class"
       val total_job_events_rdd = job_events_rdd.filter(x => x(5) != "")
 
       val total_task_events_rdd_var = task_events_rdd.filter(x => x(7) != "")
@@ -43,6 +43,7 @@ object Task3DistributionOfSchedulingClass {
       // At last, drop the duplicate rows
       val total_task_events_rdd = total_task_events_rdd_var.map(x => ((x(2), x(3)), x(7))).distinct()
 
+      // Count and Print logs
       println("Distribution of Jobs: ")
       total_job_events_rdd.map(x => (x(5), 1)).reduceByKey((x, y) => (x + y)).collect().foreach(
          x => {

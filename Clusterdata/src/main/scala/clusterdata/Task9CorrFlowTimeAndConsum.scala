@@ -39,18 +39,22 @@ object Task9CorrFlowTimeAndConsum {
                                   .load("./data/task_usage/*.csv")
         }
         
+        // Create the new column for the task's working time
         val taskUsageTimeDF = taskUsageDF.withColumn("Flow time", col("end time") - col("start time"))
 
+        // Compute the average value for the usage of CPU, usage of Memory and time consumption
         val taskUsageTimeSumDF = taskUsageTimeDF.select("job ID", "task index", "CPU rate", "canonical memory usage", "Flow time")
                                                 .groupBy("job ID", "task index")
                                                 .agg(avg("CPU rate").alias("SUM CPU Usage"),
                                                     avg("canonical memory usage").alias("SUM Mem Usage"),
                                                     avg("Flow time").alias("Sum Time consum"))
 
+        // Compute the correalation coefficient between time consumption and CPU consumption
         val corrTimeCPU = taskUsageTimeSumDF.stat.corr("Sum Time consum", "SUM CPU Usage")
-
+        // Compute the correalation coefficient between time consumption and Memory consumption
         val corrTimeMem = taskUsageTimeSumDF.stat.corr("Sum Time consum", "SUM Mem Usage")
 
+        // Print logs
         println("Correlation between Flow time and CPU usage: " + corrTimeCPU)
         println("Correlation between Flow time and Memory usage: " + corrTimeMem)
 
